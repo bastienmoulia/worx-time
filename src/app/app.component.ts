@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
   constructor() {
     registerLocaleData(localeFr, "fr");
     effect(() => {
-      console.log(this.days());
+      console.debug(this.days());
       localStorage.setItem("days", JSON.stringify(this.days()));
     });
   }
