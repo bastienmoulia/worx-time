@@ -17,8 +17,25 @@ header {
     font-size: 28px;
   }
 
-  button {
+  .header-right {
     float: right;
+    display: flex;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1em;
+
+    &:hover {
+      transform: rotate(10deg);
+      transition: all 0.2s;
+    }
+
+    svg {
+      height: 2em;
+      width: 2em;
+    }
   }
 }
 
