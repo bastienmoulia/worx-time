@@ -29,7 +29,7 @@ interface Day {
   styleUrl: "./app.component.css",
 })
 export class AppComponent implements OnInit {
-  weekHours = 37.5;
+  weekHours = 37;
   dayOffHours = 7;
   days = signal<Day[]>([
     { name: "Lundi", periods: [] },
