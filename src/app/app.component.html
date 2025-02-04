@@ -1,7 +1,13 @@
 <header>
-  <h1>{{ total() | time }} / {{ weekHours | time }}</h1>
+  <div class="header-left">
+    @if (user$ | async) {
+      <button (click)="logout()">Logout</button>
+    } @else {
+      <button (click)="login()">Login</button>
+    }
+  </div>
+  <h1>{{ total() | time }} / {{ weekHours() | time }}</h1>
   <div class="header-right">
-    <button (click)="reset()">Réinitialiser</button>
     <a href="https://github.com/bastienmoulia/time-tracker" target="_blank">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +24,7 @@
     </a>
   </div>
 </header>
-<div class="progress" [style.width.%]="(total() / weekHours) * 100"></div>
+<div class="progress" [style.width.%]="(total() / weekHours()) * 100"></div>
 <main>
   @for (day of days(); track $index; let dayIndex = $index) {
     <section>

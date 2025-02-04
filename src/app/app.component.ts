@@ -1,8 +1,9 @@
-import { registerLocaleData } from "@angular/common";
+import { AsyncPipe, JsonPipe, registerLocaleData } from "@angular/common";
 import {
   Component,
   computed,
   effect,
+  inject,
   LOCALE_ID,
   OnInit,
   signal,
@@ -10,6 +11,14 @@ import {
 import localeFr from "@angular/common/locales/fr";
 import { FormsModule } from "@angular/forms";
 import { TimePipe } from "./time.pipe";
+import {
+  Auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  user,
+} from "@angular/fire/auth";
+import { doc, Firestore, getDoc } from "@angular/fire/firestore";
 
 interface Period {
   in: string;
@@ -21,15 +30,25 @@ interface Day {
   periods: Period[];
 }
 
+interface Settings {
+  weekHours: number;
+}
+
 @Component({
   selector: "app-root",
-  imports: [FormsModule, TimePipe],
+  imports: [FormsModule, TimePipe, AsyncPipe],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
 })
 export class AppComponent implements OnInit {
-  weekHours = 37;
+  #auth = inject(Auth);
+  #firestore = inject(Firestore);
+
+  provider = new GoogleAuthProvider();
+  user$ = user(this.#auth);
+
+  weekHours = signal(35);
   dayOffHours = 7;
   days = signal<Day[]>([
     { name: "Lundi", periods: [] },
@@ -62,6 +81,30 @@ export class AppComponent implements OnInit {
       console.debug(this.days());
       localStorage.setItem("days", JSON.stringify(this.days()));
     });
+
+    this.user$.subscribe((user) => {
+      if (user) {
+        console.log("user", user);
+        this.getSettings(user.uid).then((settings) => {
+          console.log("settings", settings);
+          this.weekHours.set(settings!.weekHours);
+        });
+      }
+    });
+  }
+
+  async getSettings(uid: string): Promise<Settings | null> {
+    console.log("getSettings", uid);
+    const settingsRef = doc(this.#firestore, "settings", uid);
+    const settingsSnap = await getDoc(settingsRef);
+    if (settingsSnap.exists()) {
+      console.log("Settings data:", settingsSnap.data());
+      return settingsSnap.data() as Settings;
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      return null!;
+    }
   }
 
   ngOnInit(): void {
@@ -69,6 +112,24 @@ export class AppComponent implements OnInit {
     if (days) {
       this.days.set(JSON.parse(days));
     }
+  }
+
+  login() {
+    signInWithPopup(this.#auth, this.provider).then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      console.log("credential", credential);
+      return credential;
+    });
+  }
+
+  logout() {
+    signOut(this.#auth)
+      .then(() => {
+        console.log("signed out");
+      })
+      .catch((error) => {
+        console.log("sign out error: " + error);
+      });
   }
 
   add(dayIndex: number) {
@@ -98,15 +159,5 @@ export class AppComponent implements OnInit {
       days[dayIndex].periods[periodIndex][key] = value;
       return [...days];
     });
-  }
-
-  reset() {
-    this.days.set([
-      { name: "Lundi", periods: [] },
-      { name: "Mardi", periods: [] },
-      { name: "Mercredi", periods: [] },
-      { name: "Jeudi", periods: [] },
-      { name: "Vendredi", periods: [] },
-    ]);
   }
 }
