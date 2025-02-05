@@ -1,0 +1,43 @@
+header {
+  background-color: #444;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+
+  .header-left {
+    float: left;
+    display: flex;
+  }
+
+  h1 {
+    display: inline-block;
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .header-right {
+    float: right;
+    display: flex;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1em;
+
+    &:hover {
+      transform: rotate(10deg);
+      transition: all 0.2s;
+    }
+
+    svg {
+      height: 2em;
+      width: 2em;
+    }
+  }
+}
+
+.progress {
+  height: 4px;
+  background: #000;
+}
