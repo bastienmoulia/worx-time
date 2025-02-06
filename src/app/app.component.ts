@@ -38,7 +38,7 @@ interface Day {
   dayUid?: string;
 }
 
-interface Settings {
+export interface Settings {
   weekHours: number;
 }
 

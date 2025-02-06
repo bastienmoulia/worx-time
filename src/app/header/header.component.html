@@ -7,7 +7,9 @@
     }
   </div>
   <input type="week" [(ngModel)]="week" (ngModelChange)="weekChange()" />
-  <h1>{{ total() | time }} / {{ weekHours() | time }}</h1>
+  @if (settings()) {
+    <h1>{{ total() | time }} / {{ settings().weekHours | time }}</h1>
+  }
   <div class="header-right">
     <a href="https://github.com/bastienmoulia/time-tracker" target="_blank">
       <svg
@@ -25,4 +27,9 @@
     </a>
   </div>
 </header>
-<div class="progress" [style.width.%]="(total() / weekHours()) * 100"></div>
+@if (settings()) {
+  <div
+    class="progress"
+    [style.width.%]="(total() / settings().weekHours) * 100"
+  ></div>
+}

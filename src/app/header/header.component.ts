@@ -17,6 +17,7 @@ import {
   signOut,
 } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
+import { Settings } from "../app.component";
 
 @Component({
   selector: "app-header",
@@ -30,7 +31,7 @@ export class HeaderComponent implements OnInit {
   provider = new GoogleAuthProvider();
   user$ = user(this.#auth);
 
-  weekHours = input(35);
+  settings = input.required<Settings>();
   total = input(0);
   week = signal("");
   weekYear = output<{ week: number; year: number }>();
