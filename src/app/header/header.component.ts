@@ -18,7 +18,7 @@ import {
   signOut,
 } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
-import { Day, Settings } from "../app.component";
+import { Day, Settings } from "../main/main.component";
 
 @Component({
   selector: "app-header",
