@@ -63,6 +63,14 @@ button {
     cursor: not-allowed;
     opacity: 1;
   }
+  &:has(svg) {
+    font-size: 21px;
+    padding: 4px 8px;
+    svg {
+      height: 1em;
+      width: 1em;
+    }
+  }
 }
 
 input {
