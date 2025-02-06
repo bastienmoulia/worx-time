@@ -6,12 +6,14 @@
       <button (click)="login()">Login</button>
     }
   </div>
-  <input type="week" [(ngModel)]="week" (ngModelChange)="weekChange()" />
-  @if (settings()) {
-    <h1>{{ total() | time }} / {{ settings().weekHours | time }}</h1>
-  }
+  <div class="header-center">
+    <input type="week" [(ngModel)]="week" (ngModelChange)="weekChange()" />
+    @if (settings()) {
+      <h1>{{ total() | time }} / {{ settings().weekHours | time }}</h1>
+    }
+  </div>
   <div class="header-right">
-    <a href="https://github.com/bastienmoulia/time-tracker" target="_blank">
+    <a href="https://github.com/bastienmoulia/worx-time" target="_blank">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -28,8 +30,16 @@
   </div>
 </header>
 @if (settings()) {
-  <div
-    class="progress"
-    [style.width.%]="(total() / settings().weekHours) * 100"
-  ></div>
+  <div class="progress-container">
+    <div
+      class="progress"
+      [style.width.%]="(total() / settings().weekHours) * 100"
+    ></div>
+    @if (total() !== totalNow()) {
+      <div
+        class="progress-now"
+        [style.width.%]="(totalNow() / settings().weekHours) * 100"
+      ></div>
+    }
+  </div>
 }

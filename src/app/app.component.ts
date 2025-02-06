@@ -1,5 +1,6 @@
 import { DatePipe, registerLocaleData } from "@angular/common";
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -32,7 +33,7 @@ interface Period {
   periodUid: string;
 }
 
-interface Day {
+export interface Day {
   date: Date;
   periods: Period[];
   dayUid?: string;
@@ -48,6 +49,7 @@ export interface Settings {
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   #auth = inject(Auth);
@@ -71,9 +73,6 @@ export class AppComponent {
         return acc;
       }, 0);
     });
-  });
-  total = computed(() => {
-    return this.totalByDay().reduce((acc, total) => acc + total, 0);
   });
 
   constructor() {
@@ -140,7 +139,15 @@ export class AppComponent {
     querySnapshot.forEach((doc) => {
       periods.push({ ...doc.data(), periodUid: doc.id } as Period);
     });
-    return periods;
+    return periods.sort((a, b) => {
+      if (a.in < b.in) {
+        return -1;
+      }
+      if (a.in > b.in) {
+        return 1;
+      }
+      return 0;
+    });
   }
 
   async updatePeriod(

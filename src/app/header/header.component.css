@@ -1,12 +1,20 @@
 header {
   background-color: #444;
   color: #fff;
-  padding: 15px;
+  padding: 5px 15px;
   text-align: center;
+  display: flex;
 
   .header-left {
-    float: left;
     display: flex;
+    align-items: center;
+  }
+
+  .header-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   h1 {
@@ -16,8 +24,8 @@ header {
   }
 
   .header-right {
-    float: right;
     display: flex;
+    align-items: center;
   }
 
   a {
@@ -37,7 +45,20 @@ header {
   }
 }
 
+.progress-container {
+  position: relative;
+  height: 4px;
+  width: 100%;
+}
+
 .progress {
   height: 4px;
   background: #000;
+  position: absolute;
+}
+
+.progress-now {
+  height: 4px;
+  border-right: 2px solid #000;
+  position: absolute;
 }
