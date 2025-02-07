@@ -77,12 +77,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     return totalNow;
   });
-  interval: NodeJS.Timeout = null!;
+  interval: number = null!;
 
   ngOnInit(): void {
     this.week.set(this.getIsoWeek(new Date()));
     this.weekChange();
-    this.interval = setInterval(() => {
+    this.interval = window.setInterval(() => {
       this.today.set(new Date());
     }, 60000);
   }

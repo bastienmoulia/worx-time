@@ -20,10 +20,12 @@ import {
   updateDoc,
   deleteDoc,
   addDoc,
+  setDoc,
 } from "@angular/fire/firestore";
 import { FormsModule } from "@angular/forms";
 import { HeaderComponent } from "../header/header.component";
 import { TimePipe } from "../pipes/time.pipe";
+import { set } from "@angular/fire/database";
 
 interface Period {
   in: string;
@@ -80,10 +82,20 @@ export class MainComponent {
     effect(() => {
       if (this.user()) {
         console.log("user", this.user());
-        this.getSettings(this.user()!.uid).then((settings) => {
-          console.log("settings", settings);
-          this.settings.set(settings!);
-        });
+        this.getSettings(this.user()!.uid)
+          .then((settings) => {
+            console.log("settings", settings);
+            if (settings) {
+              this.settings.set(settings!);
+            } else {
+              // TODO open settings dialog
+              this.settings.set({ weekHours: 37 });
+              this.setSettings(this.user()!.uid, this.settings());
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting settings:", error);
+          });
       }
     });
 
@@ -105,6 +117,11 @@ export class MainComponent {
       console.log("No such document!");
       return null!;
     }
+  }
+
+  async setSettings(uid: string, settings: Settings): Promise<void> {
+    console.log("setSettings", uid, settings);
+    await setDoc(doc(this.#firestore, "settings", uid), settings);
   }
 
   async getDayUid(uid: string, date: Date): Promise<string | null> {
