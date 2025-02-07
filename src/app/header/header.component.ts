@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  OnDestroy,
   OnInit,
   output,
   signal,
@@ -27,7 +28,7 @@ import { Day, Settings } from "../main/main.component";
   styleUrl: "./header.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   #auth = inject(Auth);
 
   provider = new GoogleAuthProvider();
@@ -54,32 +55,40 @@ export class HeaderComponent implements OnInit {
   total = computed(() => {
     return this.totalByDay().reduce((acc, total) => acc + total, 0);
   });
+  today = signal(new Date());
   totalNow = computed(() => {
     const totalNow = this.total();
-    const today = new Date();
     const todayDay = this.days().find((day) => {
       return (
         day.date.toISOString().split("T")[0] ===
-        today.toISOString().split("T")[0]
+        this.today().toISOString().split("T")[0]
       );
     });
     if (todayDay) {
       const lastPeriod = todayDay.periods[todayDay.periods.length - 1];
       if (lastPeriod.in && !lastPeriod.out) {
         const inTime = new Date(
-          `${today.toISOString().split("T")[0]}T${lastPeriod.in}`,
+          `${this.today().toISOString().split("T")[0]}T${lastPeriod.in}`,
         );
-        const diff = today.getTime() - inTime.getTime();
+        const diff = this.today().getTime() - inTime.getTime();
         const hours = diff / 1000 / 60 / 60;
         return totalNow + hours;
       }
     }
     return totalNow;
   });
+  interval: NodeJS.Timeout = null!;
 
   ngOnInit(): void {
     this.week.set(this.getIsoWeek(new Date()));
     this.weekChange();
+    this.interval = setInterval(() => {
+      this.today.set(new Date());
+    }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.interval);
   }
 
   weekChange() {
