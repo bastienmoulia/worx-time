@@ -13,7 +13,9 @@
         />
       </div>
       <button type="submit">Save</button>
-      <a class="btn" [routerLink]="['../']">Cancel</a>
+      @if (!newSettings()) {
+        <a class="btn" [routerLink]="['../']">Cancel</a>
+      }
     </form>
   } @else {
     <a class="btn" [routerLink]="['../']">Close</a>

@@ -31,6 +31,7 @@ export class SettingsComponent implements OnInit {
   user = toSignal(user(this.#auth));
 
   settings = signal<Settings>(null!);
+  newSettings = signal(false);
 
   constructor() {
     effect(() => {
@@ -40,6 +41,7 @@ export class SettingsComponent implements OnInit {
             this.settings.set(settings!);
           } else {
             this.settings.set({ weekHours: 35 });
+            this.newSettings.set(true);
           }
         });
       }
