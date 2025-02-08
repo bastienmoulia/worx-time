@@ -1,8 +1,13 @@
 <header>
   <div class="header-left">
     @if (user$ | async) {
-      <button (click)="logout()">Logout</button>
-      <a class="btn" [routerLink]="['./settings']">Settings</a>
+      <button id="menu-toggle" popovertarget="menu-popover">Menu</button>
+      <div id="menu-popover" popover anchor="menu-toggle">
+        <div>
+          <button (click)="logout()">Logout</button>
+          <a class="btn" [routerLink]="['./settings']">Settings</a>
+        </div>
+      </div>
     } @else {
       <button (click)="login()">Login</button>
     }

@@ -45,6 +45,22 @@ header {
   }
 }
 
+#menu-popover {
+  background: #444;
+  border: none;
+  bottom: anchor(top);
+  right: anchor(right);
+  translate: 0 65px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    gap: 5px;
+    padding: 0 0.5em 0.5em;
+  }
+}
+
 .progress-container {
   position: relative;
   height: 4px;

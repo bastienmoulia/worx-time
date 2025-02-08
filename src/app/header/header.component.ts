@@ -19,7 +19,7 @@ import {
   signOut,
 } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { Settings, Day } from "../app.service";
 
 @Component({
@@ -31,6 +31,7 @@ import { Settings, Day } from "../app.service";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   #auth = inject(Auth);
+  #router = inject(Router);
 
   provider = new GoogleAuthProvider();
   user$ = user(this.#auth);
@@ -116,6 +117,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .catch((error) => {
         console.log("sign out error: " + error);
       });
+    this.#router.navigate(["./login"]);
   }
 
   private getIsoWeek(d: Date) {

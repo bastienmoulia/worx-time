@@ -1,4 +1,30 @@
-import { Routes } from "@angular/router";
+import { inject } from "@angular/core";
+import { Auth, user } from "@angular/fire/auth";
+import {
+  ActivatedRouteSnapshot,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+  Routes,
+} from "@angular/router";
+import { map } from "rxjs";
+
+const canActivate: CanActivateFn = (
+  _route: ActivatedRouteSnapshot,
+  _state: RouterStateSnapshot,
+) => {
+  const auth = inject(Auth);
+  const router = inject(Router);
+  return user(auth).pipe(
+    map((user) => {
+      if (user) {
+        return true;
+      } else {
+        return router.createUrlTree(["/login"]);
+      }
+    }),
+  );
+};
 
 export const routes: Routes = [
   {
@@ -14,6 +40,7 @@ export const routes: Routes = [
           ),
       },
     ],
+    canActivate: [canActivate],
   },
   {
     path: "login",

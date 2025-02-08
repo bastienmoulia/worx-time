@@ -63,7 +63,13 @@ button,
     color: #dddddd;
     cursor: not-allowed;
     opacity: 1;
+    &:hover {
+      box-shadow:
+        #aaa 0 0 0 1px,
+        rgba(255, 255, 255, 0.8) 0 0 0 2px;
+    }
   }
+
   &:has(svg) {
     font-size: 21px;
     padding: 4px 8px;
