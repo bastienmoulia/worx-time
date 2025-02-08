@@ -12,7 +12,7 @@ import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Auth, user } from "@angular/fire/auth";
-import { AppService, Settings } from "../app.service";
+import { AppService, DEFAULT_SETTINGS, Settings } from "../app.service";
 
 @Component({
   selector: "app-settings",
@@ -30,17 +30,15 @@ export class SettingsComponent implements OnInit {
     viewChild.required<ElementRef<HTMLDialogElement>>("settingsDialog");
   user = toSignal(user(this.#auth));
 
-  settings = signal<Settings>(null!);
+  settingsEdit = signal<Settings>(null!);
   newSettings = signal(false);
 
   constructor() {
     effect(() => {
       if (this.user()) {
         this.#appService.getSettings(this.user()!.uid).then((settings) => {
-          if (settings) {
-            this.settings.set(settings!);
-          } else {
-            this.settings.set({ weekHours: 35 });
+          this.settingsEdit.set({ ...DEFAULT_SETTINGS, ...settings });
+          if (!settings) {
             this.newSettings.set(true);
           }
         });
@@ -53,7 +51,11 @@ export class SettingsComponent implements OnInit {
   }
 
   save(): void {
-    this.#appService.setSettings(this.user()!.uid, this.settings());
+    this.#appService
+      .setSettings(this.user()!.uid, this.settingsEdit())
+      .then(() => {
+        this.#appService.settings.set(this.settingsEdit());
+      });
     this.#router.navigate(["./"]);
   }
 }

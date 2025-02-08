@@ -1,8 +1,4 @@
-<app-header
-  [settings]="settings()"
-  [days]="days()"
-  (weekYear)="weekYearChange($event)"
-></app-header>
+<app-header [days]="days()" (weekYear)="weekYearChange($event)"></app-header>
 <main>
   @for (day of days(); track $index; let dayIndex = $index) {
     <section>
@@ -20,6 +16,7 @@
               type="time"
               [(ngModel)]="period.in"
               (ngModelChange)="update(dayIndex, periodIndex, 'in', $event)"
+              min="{{ settings().minTime }}"
             />
           </div>
           <div>
@@ -29,6 +26,7 @@
               type="time"
               [(ngModel)]="period.out"
               (ngModelChange)="update(dayIndex, periodIndex, 'out', $event)"
+              max="{{ settings().maxTime }}"
             />
           </div>
           <button (click)="remove(dayIndex, periodIndex)">
@@ -37,7 +35,6 @@
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-trash"
               viewBox="0 0 16 16"
             >
               <path

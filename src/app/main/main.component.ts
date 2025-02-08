@@ -13,7 +13,13 @@ import { FormsModule } from "@angular/forms";
 import { HeaderComponent } from "../header/header.component";
 import { TimePipe } from "../pipes/time.pipe";
 import { Router, RouterOutlet } from "@angular/router";
-import { AppService, Day, Period, Settings } from "../app.service";
+import {
+  AppService,
+  Day,
+  DEFAULT_SETTINGS,
+  Period,
+  Settings,
+} from "../app.service";
 
 @Component({
   selector: "app-main",
@@ -36,7 +42,6 @@ export class MainComponent {
 
   user = toSignal(user(this.#auth));
 
-  settings = signal<Settings>(null!);
   mondayOfWeek = signal<Date>(null!);
   days = signal<Day[]>([]);
   totalByDay = computed(() => {
@@ -53,6 +58,9 @@ export class MainComponent {
       }, 0);
     });
   });
+  settings = computed(() => {
+    return this.#appService.settings();
+  });
 
   constructor() {
     effect(() => {
@@ -67,7 +75,10 @@ export class MainComponent {
           .then((settings) => {
             console.log("settings", settings);
             if (settings) {
-              this.settings.set(settings!);
+              this.#appService.settings.set({
+                ...settings,
+                ...DEFAULT_SETTINGS,
+              });
             } else {
               this.#router.navigate(["./settings"]);
             }

@@ -20,7 +20,7 @@ import {
 } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { Settings, Day } from "../app.service";
+import { Day, AppService } from "../app.service";
 
 @Component({
   selector: "app-header",
@@ -32,11 +32,11 @@ import { Settings, Day } from "../app.service";
 export class HeaderComponent implements OnInit, OnDestroy {
   #auth = inject(Auth);
   #router = inject(Router);
+  #appService = inject(AppService);
 
   provider = new GoogleAuthProvider();
   user$ = user(this.#auth);
 
-  settings = input.required<Settings>();
   days = input.required<Day[]>();
   week = signal("");
   weekYear = output<{ week: number; year: number }>();
@@ -78,6 +78,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     }
     return totalNow;
+  });
+  settings = computed(() => {
+    return this.#appService.settings();
   });
   interval: number = null!;
 

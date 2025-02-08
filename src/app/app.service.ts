@@ -27,7 +27,15 @@ export interface Day {
 
 export interface Settings {
   weekHours: number;
+  minTime?: string;
+  maxTime?: string;
 }
+
+export const DEFAULT_SETTINGS: Settings = {
+  weekHours: 35,
+  minTime: "08:00",
+  maxTime: "18:00",
+};
 
 @Injectable({
   providedIn: "root",
