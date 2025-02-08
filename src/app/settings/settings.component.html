@@ -32,9 +32,9 @@
           required
         />
       </div>
-      <button type="submit">Save</button>
+      <button type="submit" class="btn-success">Save</button>
       @if (!newSettings()) {
-        <a class="btn" [routerLink]="['../']">Cancel</a>
+        <a class="btn btn-danger" [routerLink]="['../']">Cancel</a>
       }
     </form>
   } @else {

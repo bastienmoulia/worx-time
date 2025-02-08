@@ -29,7 +29,7 @@
               max="{{ settings().maxTime }}"
             />
           </div>
-          <button (click)="remove(dayIndex, periodIndex)">
+          <button (click)="remove(dayIndex, periodIndex)" class="btn-danger">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -47,7 +47,9 @@
           </button>
         }
         <hr />
-        <button (click)="add(dayIndex)">Ajouter une période</button>
+        <button (click)="add(dayIndex)" class="btn-success">
+          Ajouter une période
+        </button>
       </div>
     </section>
   }

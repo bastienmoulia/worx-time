@@ -70,12 +70,31 @@ button,
     }
   }
 
+  &.btn-danger {
+    &:hover {
+      color: #aa0000;
+      box-shadow:
+        #ff0000 0 0 0 1px,
+        rgba(255, 255, 255, 0.8) 0 0 0 2px;
+    }
+  }
+
+  &.btn-success {
+    &:hover {
+      color: #008800;
+      box-shadow:
+        #00bb00 0 0 0 1px,
+        rgba(255, 255, 255, 0.8) 0 0 0 2px;
+    }
+  }
+
   &:has(svg) {
     font-size: 21px;
-    padding: 4px 8px;
+    padding: 3px 6px;
     svg {
       height: 1em;
       width: 1em;
+      margin-top: 2px;
     }
   }
 }
