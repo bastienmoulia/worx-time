@@ -59,12 +59,10 @@ export class AppService {
   }
 
   async setSettings(uid: string, settings: Settings): Promise<void> {
-    console.log("setSettings", uid, settings);
     await setDoc(doc(this.#firestore, "settings", uid), settings);
   }
 
   async getDayUid(uid: string, date: Date): Promise<string | null> {
-    console.log("getPeriods", uid, date);
     const starDate = new Date(date);
     starDate.setHours(0, 0, 0, 0);
     const endDate = new Date(date);
@@ -107,7 +105,6 @@ export class AppService {
     periodUid: string,
     period: Partial<Period>,
   ) {
-    console.log("updatePeriod", dayUid, periodUid, period);
     const periodRef = doc(
       this.#firestore,
       "days",
@@ -119,7 +116,6 @@ export class AppService {
   }
 
   async deletePeriod(dayUid: string, periodUid: string) {
-    console.log("deletePeriod", dayUid, periodUid);
     const periodRef = doc(
       this.#firestore,
       "days",

@@ -69,15 +69,13 @@ export class MainComponent {
 
     effect(() => {
       if (this.user()) {
-        console.log("user", this.user());
         this.#appService
           .getSettings(this.user()!.uid)
           .then((settings) => {
-            console.log("settings", settings);
             if (settings) {
               this.#appService.settings.set({
-                ...settings,
                 ...DEFAULT_SETTINGS,
+                ...settings,
               });
             } else {
               this.#router.navigate(["./settings"]);

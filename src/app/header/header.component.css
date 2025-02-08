@@ -48,16 +48,19 @@ header {
 #menu-popover {
   background: #444;
   border: none;
-  bottom: anchor(top);
-  right: anchor(right);
-  translate: 0 65px;
+  margin: 0;
+  width: 150px;
+  height: 78px;
+  position: absolute;
+  top: 55px;
+  left: 0;
 
   > div {
     display: flex;
     flex-direction: column;
     z-index: 1;
     gap: 5px;
-    padding: 0 0.5em 0.5em;
+    padding: 0 10px;
   }
 }
 
