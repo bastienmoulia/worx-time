@@ -2,6 +2,7 @@
   <div class="header-left">
     @if (user$ | async) {
       <button (click)="logout()">Logout</button>
+      <a class="btn" [routerLink]="['./settings']">Settings</a>
     } @else {
       <button (click)="login()">Login</button>
     }
@@ -13,13 +14,16 @@
     }
   </div>
   <div class="header-right">
-    <a href="https://github.com/bastienmoulia/worx-time" target="_blank">
+    <a
+      class="link"
+      href="https://github.com/bastienmoulia/worx-time"
+      target="_blank"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
         height="16"
         fill="currentColor"
-        class="bi bi-github"
         viewBox="0 0 16 16"
       >
         <path

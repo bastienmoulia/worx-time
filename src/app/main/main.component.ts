@@ -9,50 +9,30 @@ import {
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Auth, user } from "@angular/fire/auth";
-import {
-  Firestore,
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  addDoc,
-  setDoc,
-} from "@angular/fire/firestore";
 import { FormsModule } from "@angular/forms";
 import { HeaderComponent } from "../header/header.component";
 import { TimePipe } from "../pipes/time.pipe";
-import { set } from "@angular/fire/database";
-
-interface Period {
-  in: string;
-  out: string;
-  periodUid: string;
-}
-
-export interface Day {
-  date: Date;
-  periods: Period[];
-  dayUid?: string;
-}
-
-export interface Settings {
-  weekHours: number;
-}
+import { Router, RouterOutlet } from "@angular/router";
+import { AppService, Day, Period, Settings } from "../app.service";
 
 @Component({
   selector: "app-main",
-  imports: [FormsModule, TimePipe, HeaderComponent, HeaderComponent, DatePipe],
+  imports: [
+    FormsModule,
+    TimePipe,
+    HeaderComponent,
+    HeaderComponent,
+    DatePipe,
+    RouterOutlet,
+  ],
   templateUrl: "./main.component.html",
   styleUrl: "./main.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
   #auth = inject(Auth);
-  #firestore = inject(Firestore);
+  #appService = inject(AppService);
+  #router = inject(Router);
 
   user = toSignal(user(this.#auth));
 
@@ -82,15 +62,14 @@ export class MainComponent {
     effect(() => {
       if (this.user()) {
         console.log("user", this.user());
-        this.getSettings(this.user()!.uid)
+        this.#appService
+          .getSettings(this.user()!.uid)
           .then((settings) => {
             console.log("settings", settings);
             if (settings) {
               this.settings.set(settings!);
             } else {
-              // TODO open settings dialog
-              this.settings.set({ weekHours: 37 });
-              this.setSettings(this.user()!.uid, this.settings());
+              this.#router.navigate(["./settings"]);
             }
           })
           .catch((error) => {
@@ -104,107 +83,6 @@ export class MainComponent {
         this.getData(this.mondayOfWeek(), this.user()!.uid);
       }
     });
-  }
-
-  async getSettings(uid: string): Promise<Settings | null> {
-    console.log("getSettings", uid);
-    const settingsRef = doc(this.#firestore, "settings", uid);
-    const settingsSnap = await getDoc(settingsRef);
-    if (settingsSnap.exists()) {
-      console.log("Settings data:", settingsSnap.data());
-      return settingsSnap.data() as Settings;
-    } else {
-      console.log("No such document!");
-      return null!;
-    }
-  }
-
-  async setSettings(uid: string, settings: Settings): Promise<void> {
-    console.log("setSettings", uid, settings);
-    await setDoc(doc(this.#firestore, "settings", uid), settings);
-  }
-
-  async getDayUid(uid: string, date: Date): Promise<string | null> {
-    console.log("getPeriods", uid, date);
-    const starDate = new Date(date);
-    starDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(date);
-    endDate.setHours(23, 59, 59, 999);
-    const q = query(
-      collection(this.#firestore, "days"),
-      where("uid", "==", uid),
-      where("date", "<=", endDate),
-      where("date", ">=", starDate),
-    );
-
-    const querySnapshot = await getDocs(q);
-    let dayUid = null;
-    querySnapshot.forEach((doc) => {
-      dayUid = doc.id;
-    });
-    return dayUid!;
-  }
-
-  async getPeriods(dayUid: string): Promise<Period[]> {
-    const q = query(collection(this.#firestore, "days", dayUid, "periods"));
-    const querySnapshot = await getDocs(q);
-    const periods: Period[] = [];
-    querySnapshot.forEach((doc) => {
-      periods.push({ ...doc.data(), periodUid: doc.id } as Period);
-    });
-    return periods.sort((a, b) => {
-      if (a.in < b.in) {
-        return -1;
-      }
-      if (a.in > b.in) {
-        return 1;
-      }
-      return 0;
-    });
-  }
-
-  async updatePeriod(
-    dayUid: string,
-    periodUid: string,
-    period: Partial<Period>,
-  ) {
-    console.log("updatePeriod", dayUid, periodUid, period);
-    const periodRef = doc(
-      this.#firestore,
-      "days",
-      dayUid,
-      "periods",
-      periodUid,
-    );
-    await updateDoc(periodRef, period);
-  }
-
-  async deletePeriod(dayUid: string, periodUid: string) {
-    console.log("deletePeriod", dayUid, periodUid);
-    const periodRef = doc(
-      this.#firestore,
-      "days",
-      dayUid,
-      "periods",
-      periodUid,
-    );
-    await deleteDoc(periodRef);
-  }
-
-  async addPeriod(dayUid: string, period: Partial<Period>): Promise<string> {
-    const docRef = await addDoc(
-      collection(this.#firestore, "days", dayUid, "periods"),
-      period,
-    );
-    return docRef.id;
-  }
-
-  async addDay(uid: string, date: Date): Promise<string> {
-    const docRef = await addDoc(collection(this.#firestore, "days"), {
-      uid,
-      date,
-    });
-    return docRef.id;
   }
 
   weekYearChange(weekYear: { week: number; year: number }) {
@@ -230,10 +108,10 @@ export class MainComponent {
         date,
         periods: [],
       });
-      const dayUid = await this.getDayUid(uid, date);
+      const dayUid = await this.#appService.getDayUid(uid, date);
       if (dayUid) {
         days[i].dayUid = dayUid;
-        const periods = await this.getPeriods(dayUid);
+        const periods = await this.#appService.getPeriods(dayUid);
         days[i].periods = periods;
       }
     }
@@ -244,34 +122,41 @@ export class MainComponent {
   async add(dayIndex: number) {
     let dayUid = this.days()[dayIndex].dayUid;
     if (!dayUid) {
-      dayUid = await this.addDay(this.user()!.uid, this.days()[dayIndex].date);
+      dayUid = await this.#appService.addDay(
+        this.user()!.uid,
+        this.days()[dayIndex].date,
+      );
       this.days.update((days) => {
         days[dayIndex].dayUid = dayUid;
         return [...days];
       });
     }
-    this.addPeriod(dayUid, { in: "", out: "" }).then((periodUid) => {
-      this.days.update((days) => {
-        days[dayIndex].periods.push({
-          in: null!,
-          out: null!,
-          periodUid,
+    this.#appService
+      .addPeriod(dayUid, { in: "", out: "" })
+      .then((periodUid) => {
+        this.days.update((days) => {
+          days[dayIndex].periods.push({
+            in: null!,
+            out: null!,
+            periodUid,
+          });
+          return [...days];
         });
-        return [...days];
       });
-    });
   }
 
   remove(dayIndex: number, periodIndex: number) {
-    this.deletePeriod(
-      this.days()[dayIndex].dayUid!,
-      this.days()[dayIndex].periods[periodIndex].periodUid!,
-    ).then(() => {
-      this.days.update((days) => {
-        days[dayIndex].periods.splice(periodIndex, 1);
-        return [...days];
+    this.#appService
+      .deletePeriod(
+        this.days()[dayIndex].dayUid!,
+        this.days()[dayIndex].periods[periodIndex].periodUid!,
+      )
+      .then(() => {
+        this.days.update((days) => {
+          days[dayIndex].periods.splice(periodIndex, 1);
+          return [...days];
+        });
       });
-    });
   }
 
   update(
@@ -280,15 +165,17 @@ export class MainComponent {
     key: keyof Period,
     value: string,
   ) {
-    this.updatePeriod(
-      this.days()[dayIndex].dayUid!,
-      this.days()[dayIndex].periods[periodIndex].periodUid!,
-      { [key]: value },
-    ).then(() => {
-      this.days.update((days) => {
-        days[dayIndex].periods[periodIndex][key] = value;
-        return [...days];
+    this.#appService
+      .updatePeriod(
+        this.days()[dayIndex].dayUid!,
+        this.days()[dayIndex].periods[periodIndex].periodUid!,
+        { [key]: value },
+      )
+      .then(() => {
+        this.days.update((days) => {
+          days[dayIndex].periods[periodIndex][key] = value;
+          return [...days];
+        });
       });
-    });
   }
 }

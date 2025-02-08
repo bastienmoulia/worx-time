@@ -19,11 +19,12 @@ import {
   signOut,
 } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
-import { Day, Settings } from "../main/main.component";
+import { RouterLink } from "@angular/router";
+import { Settings, Day } from "../app.service";
 
 @Component({
   selector: "app-header",
-  imports: [AsyncPipe, TimePipe, FormsModule],
+  imports: [AsyncPipe, TimePipe, FormsModule, RouterLink],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,

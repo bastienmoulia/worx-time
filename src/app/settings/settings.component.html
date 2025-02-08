@@ -1,0 +1,21 @@
+<dialog #settingsDialog>
+  <h2>Settings</h2>
+  @if (settings()) {
+    <form (submit)="save()">
+      <div>
+        <label for="weekHours">Week hours</label>
+        <input
+          id="weekHours"
+          type="number"
+          name="weekHours"
+          [(ngModel)]="settings().weekHours"
+          required
+        />
+      </div>
+      <button type="submit">Save</button>
+      <a class="btn" [routerLink]="['../']">Cancel</a>
+    </form>
+  } @else {
+    <a class="btn" [routerLink]="['../']">Close</a>
+  }
+</dialog>
