@@ -123,13 +123,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.#router.navigate(["./login"]);
   }
 
-  private getIsoWeek(d: Date) {
-    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    const weekNo = Math.ceil(
-      ((d.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7,
+  private getIsoWeek(d: Date): string {
+    const date = new Date(d.getTime());
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+    const week1 = new Date(date.getFullYear(), 0, 4);
+    const weekNumber = Math.round(
+      ((date.getTime() - week1.getTime()) / 86400000 -
+        3 +
+        ((week1.getDay() + 6) % 7)) /
+        7 +
+        1,
     );
-    return `${date.getUTCFullYear()}-W${weekNo.toFixed(0).padStart(2, "0")}`;
+    return `${date.getFullYear()}-W${weekNumber.toString().padStart(2, "0")}`;
   }
 }
