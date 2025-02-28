@@ -68,6 +68,7 @@ header {
   position: relative;
   height: 4px;
   width: 100%;
+  overflow: hidden;
 }
 
 .progress {
