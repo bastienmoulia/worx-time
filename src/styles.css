@@ -131,8 +131,9 @@ label {
   border: none;
   margin: 0;
   position: absolute;
-  top: anchor(bottom);
-  left: anchor(left);
+  position-area: end end;
+  position-try: end start;
+
   border-radius: 10px;
 
   > div {
