@@ -1,7 +1,7 @@
 <header>
   <div class="header-left">
     @if (user$ | async) {
-      <button popovertarget="menu-popover">
+      <button popovertarget="menu-popover" class="btn-menu">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -15,7 +15,7 @@
           />
         </svg>
       </button>
-      <div id="menu-popover" popover>
+      <div id="menu-popover" class="popover" popover>
         <div>
           <button (click)="logout()">Logout</button>
           <a class="btn" [routerLink]="['./settings']">Settings</a>
@@ -53,14 +53,28 @@
 </header>
 @if (settings()) {
   <div class="progress-container">
+    @if (total() !== hoursPeriod()) {
+      <div
+        class="progress"
+        [style.width.%]="(total() / settings().weekHours) * 100"
+      ></div>
+    }
     <div
-      class="progress"
-      [style.width.%]="(total() / settings().weekHours) * 100"
+      class="progress-period"
+      [style.width.%]="(hoursPeriod() / settings().weekHours) * 100"
     ></div>
     @if (total() !== totalNow()) {
       <div
         class="progress-now"
         [style.width.%]="(totalNow() / settings().weekHours) * 100"
+      ></div>
+    }
+    @if (total() !== totalNow() && totalNow() !== hoursPeriod()) {
+      <div
+        class="progress-period-now"
+        [style.width.%]="
+          ((totalNow() - hoursAbsence()) / settings().weekHours) * 100
+        "
       ></div>
     }
   </div>

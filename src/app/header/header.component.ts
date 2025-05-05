@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   days = input.required<Day[]>();
   week = signal("");
   weekYear = output<{ week: number; year: number }>();
-  totalByDay = computed(() => {
+  hoursPeriodByDay = computed(() => {
     return this.days().map((day) => {
       return day.periods.reduce((acc, period) => {
         if (period.in && period.out) {
@@ -54,8 +54,44 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }, 0);
     });
   });
+
+  hoursAbsenceByDay = computed(() => {
+    return this.days().map((day, index) => {
+      // TODO: use settings to get the hours
+      if (index < 4) {
+        if (day.absence === "day") {
+          return 7.5;
+        } else if (day.absence === "morning") {
+          return 3.75;
+        } else if (day.absence === "afternoon") {
+          return 3.75;
+        }
+      } else {
+        if (day.absence === "day") {
+          return 7;
+        } else if (day.absence === "morning") {
+          return 3.5;
+        } else if (day.absence === "afternoon") {
+          return 3.5;
+        }
+      }
+      return 0;
+    });
+  });
+
+  totalByDay = computed(() => {
+    return this.hoursPeriodByDay().map((hoursByDay, index) => {
+      return hoursByDay + this.hoursAbsenceByDay()[index];
+    });
+  });
+  hoursPeriod = computed(() => {
+    return this.hoursPeriodByDay().reduce((acc, total) => acc + total, 0);
+  });
   total = computed(() => {
     return this.totalByDay().reduce((acc, total) => acc + total, 0);
+  });
+  hoursAbsence = computed(() => {
+    return this.total() - this.hoursPeriod();
   });
   today = signal(new Date());
   totalNow = computed(() => {

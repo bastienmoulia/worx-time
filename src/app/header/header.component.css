@@ -45,23 +45,12 @@ header {
   }
 }
 
-#menu-popover {
-  background: #444;
-  border: none;
-  margin: 0;
-  width: 150px;
-  height: 78px;
-  position: absolute;
-  top: 55px;
-  left: 0;
+.btn-menu {
+  anchor-name: --menu;
+}
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
-    gap: 5px;
-    padding: 0 10px;
-  }
+#menu-popover {
+  position-anchor: --menu;
 }
 
 .progress-container {
@@ -73,11 +62,23 @@ header {
 
 .progress {
   height: 4px;
+  background: #bbb;
+  position: absolute;
+}
+
+.progress-period {
+  height: 4px;
   background: #000;
   position: absolute;
 }
 
 .progress-now {
+  height: 4px;
+  border-right: 2px solid #bbb;
+  position: absolute;
+}
+
+.progress-period-now {
   height: 4px;
   border-right: 2px solid #000;
   position: absolute;

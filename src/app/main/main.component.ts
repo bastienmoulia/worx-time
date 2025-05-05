@@ -44,7 +44,8 @@ export class MainComponent {
 
   mondayOfWeek = signal<Date>(null!);
   days = signal<Day[]>([]);
-  totalByDay = computed(() => {
+
+  hoursPeriodByDay = computed(() => {
     return this.days().map((day) => {
       return day.periods.reduce((acc, period) => {
         if (period.in && period.out) {
@@ -58,6 +59,37 @@ export class MainComponent {
       }, 0);
     });
   });
+
+  hoursAbsenceByDay = computed(() => {
+    return this.days().map((day, index) => {
+      // TODO: use settings to get the hours
+      if (index < 4) {
+        if (day.absence === "day") {
+          return 7.5;
+        } else if (day.absence === "morning") {
+          return 3.75;
+        } else if (day.absence === "afternoon") {
+          return 3.75;
+        }
+      } else {
+        if (day.absence === "day") {
+          return 7;
+        } else if (day.absence === "morning") {
+          return 3.5;
+        } else if (day.absence === "afternoon") {
+          return 3.5;
+        }
+      }
+      return 0;
+    });
+  });
+
+  totalByDay = computed(() => {
+    return this.hoursPeriodByDay().map((hoursByDay, index) => {
+      return hoursByDay + this.hoursAbsenceByDay()[index];
+    });
+  });
+
   settings = computed(() => {
     return this.#appService.settings();
   });
@@ -117,10 +149,11 @@ export class MainComponent {
         date,
         periods: [],
       });
-      const dayUid = await this.#appService.getDayUid(uid, date);
-      if (dayUid) {
-        days[i].dayUid = dayUid;
-        const periods = await this.#appService.getPeriods(dayUid);
+      const day = await this.#appService.getDay(uid, date);
+      if (day) {
+        const { date: _, ...dayWithoutDate } = day;
+        days[i] = { ...days[i], ...dayWithoutDate };
+        const periods = await this.#appService.getPeriods(day.dayUid!);
         days[i].periods = periods;
       }
     }
@@ -131,14 +164,7 @@ export class MainComponent {
   async add(dayIndex: number) {
     let dayUid = this.days()[dayIndex].dayUid;
     if (!dayUid) {
-      dayUid = await this.#appService.addDay(
-        this.user()!.uid,
-        this.days()[dayIndex].date,
-      );
-      this.days.update((days) => {
-        days[dayIndex].dayUid = dayUid;
-        return [...days];
-      });
+      dayUid = await this.addDay(dayIndex);
     }
     this.#appService
       .addPeriod(dayUid, { in: "", out: "" })
@@ -186,5 +212,35 @@ export class MainComponent {
           return [...days];
         });
       });
+  }
+
+  async markAbsence(
+    dayIndex: number,
+    type: "day" | "morning" | "afternoon" | undefined,
+  ) {
+    let dayUid = this.days()[dayIndex].dayUid;
+    if (!dayUid) {
+      dayUid = await this.addDay(dayIndex);
+    }
+    this.#appService
+      .updateAbsence(this.days()[dayIndex].dayUid!, type)
+      .then(() => {
+        this.days.update((days) => {
+          days[dayIndex].absence = type;
+          return [...days];
+        });
+      });
+  }
+
+  private async addDay(dayIndex: number): Promise<string> {
+    const dayUid = await this.#appService.addDay(
+      this.user()!.uid,
+      this.days()[dayIndex].date,
+    );
+    this.days.update((days) => {
+      days[dayIndex].dayUid = dayUid;
+      return [...days];
+    });
+    return dayUid;
   }
 }

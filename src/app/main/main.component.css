@@ -44,3 +44,11 @@ main {
     margin: 0.5em 0;
   }
 }
+
+.btn-absence {
+  anchor-name: --absence;
+}
+
+.absence-popover {
+  position-anchor: --absence;
+}

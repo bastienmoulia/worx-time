@@ -23,6 +23,7 @@ export interface Day {
   date: Date;
   periods: Period[];
   dayUid?: string;
+  absence?: "day" | "morning" | "afternoon";
 }
 
 export interface Settings {
@@ -62,7 +63,7 @@ export class AppService {
     await setDoc(doc(this.#firestore, "settings", uid), settings);
   }
 
-  async getDayUid(uid: string, date: Date): Promise<string | null> {
+  async getDay(uid: string, date: Date): Promise<Day | null> {
     const starDate = new Date(date);
     starDate.setHours(0, 0, 0, 0);
     const endDate = new Date(date);
@@ -75,11 +76,11 @@ export class AppService {
     );
 
     const querySnapshot = await getDocs(q);
-    let dayUid = null;
+    let day: Day | null = null;
     querySnapshot.forEach((doc) => {
-      dayUid = doc.id;
+      day = { ...doc.data(), dayUid: doc.id } as Day;
     });
-    return dayUid!;
+    return day!;
   }
 
   async getPeriods(dayUid: string): Promise<Period[]> {
@@ -140,5 +141,13 @@ export class AppService {
       date,
     });
     return docRef.id;
+  }
+
+  async updateAbsence(
+    dayUid: string,
+    absence: "day" | "morning" | "afternoon" | undefined,
+  ): Promise<void> {
+    const dayRef = doc(this.#firestore, "days", dayUid);
+    await updateDoc(dayRef, { absence: absence || "" });
   }
 }
