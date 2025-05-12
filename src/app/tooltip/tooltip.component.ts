@@ -1,8 +1,10 @@
+import { DOCUMENT } from "@angular/common";
 import {
   Component,
   computed,
   effect,
   ElementRef,
+  inject,
   input,
   OnDestroy,
   viewChild,
@@ -15,6 +17,8 @@ import {
   styleUrl: "./tooltip.component.css",
 })
 export class TooltipComponent implements OnDestroy {
+  #document = inject(DOCUMENT);
+
   target = input.required<HTMLElement>();
   tooltip = viewChild.required<ElementRef>("popover");
   position = input<"top" | "bottom" | "left" | "right">("top");
@@ -32,6 +36,7 @@ export class TooltipComponent implements OnDestroy {
       this.target().addEventListener("mouseleave", this.hideTooltip);
       this.target().addEventListener("focus", this.showTooltip);
       this.target().addEventListener("blur", this.hideTooltip);
+      this.#document.addEventListener("keydown", this.handleEscapeKey);
     });
   }
 
@@ -40,6 +45,7 @@ export class TooltipComponent implements OnDestroy {
     this.target().removeEventListener("mouseleave", this.hideTooltip);
     this.target().removeEventListener("focus", this.showTooltip);
     this.target().removeEventListener("blur", this.hideTooltip);
+    this.#document.removeEventListener("keydown", this.handleEscapeKey);
   }
 
   showTooltip = () => {
@@ -50,5 +56,11 @@ export class TooltipComponent implements OnDestroy {
 
   hideTooltip = () => {
     this.tooltip().nativeElement.hidePopover();
+  };
+
+  handleEscapeKey = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      this.hideTooltip();
+    }
   };
 }
