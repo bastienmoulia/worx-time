@@ -1,9 +1,9 @@
 <dialog #settingsDialog>
-  <h2>Settings</h2>
+  <h2>Paramètres</h2>
   @if (settingsEdit()) {
     <form (submit)="save()">
       <div>
-        <label for="weekHours">Week hours</label>
+        <label for="weekHours">Heures par semaine</label>
         <input
           id="weekHours"
           type="number"
@@ -13,7 +13,7 @@
         />
       </div>
       <div>
-        <label for="minTime">Min time</label>
+        <label for="minTime">Heure minimum d'arrivée</label>
         <input
           id="minTime"
           type="time"
@@ -23,7 +23,7 @@
         />
       </div>
       <div>
-        <label for="maxTime">Max time</label>
+        <label for="maxTime">Heure maximum de départ</label>
         <input
           id="maxTime"
           type="time"
@@ -32,12 +32,12 @@
           required
         />
       </div>
-      <button type="submit" class="btn-success">Save</button>
+      <button type="submit" class="btn-success">Enregistrer</button>
       @if (!newSettings()) {
-        <a class="btn btn-danger" [routerLink]="['../']">Cancel</a>
+        <a class="btn btn-danger" [routerLink]="['../']">Annuler</a>
       }
     </form>
   } @else {
-    <a class="btn" [routerLink]="['../']">Close</a>
+    <a class="btn" [routerLink]="['../']">Fermer</a>
   }
 </dialog>

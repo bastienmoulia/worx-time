@@ -17,12 +17,12 @@
       </button>
       <div id="menu-popover" class="popover" popover>
         <div>
-          <button (click)="logout()">Logout</button>
-          <a class="btn" [routerLink]="['./settings']">Settings</a>
+          <button (click)="logout()">Déconnexion</button>
+          <a class="btn" [routerLink]="['./settings']">Paramètres</a>
         </div>
       </div>
     } @else {
-      <button (click)="login()">Login</button>
+      <button (click)="login()">Connexion</button>
     }
   </div>
   <div class="header-center">
