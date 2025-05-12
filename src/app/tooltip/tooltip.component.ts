@@ -18,7 +18,11 @@ export class TooltipComponent implements OnDestroy {
   target = input.required<HTMLElement>();
   tooltip = viewChild.required<ElementRef>("popover");
   position = input<"top" | "bottom" | "left" | "right">("top");
-  tooltipClass = computed<string>(() => {
+  tooltipClass = input<string>();
+  class = computed<string>(() => {
+    if (this.tooltipClass()) {
+      return `tooltip-${this.position()} ${this.tooltipClass()}`;
+    }
     return `tooltip-${this.position()}`;
   });
 
