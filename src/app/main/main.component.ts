@@ -20,6 +20,7 @@ import {
   Period,
   Settings,
 } from "../app.service";
+import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({
   selector: "app-main",
@@ -30,7 +31,8 @@ import {
     HeaderComponent,
     DatePipe,
     RouterOutlet,
-  ],
+    TooltipComponent
+],
   templateUrl: "./main.component.html",
   styleUrl: "./main.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,

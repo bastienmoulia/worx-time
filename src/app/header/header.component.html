@@ -1,7 +1,8 @@
 <header>
   <div class="header-left">
     @if (user$ | async) {
-      <button popovertarget="menu-popover" class="btn-menu">
+      <app-tooltip [target]="menuBtn" [position]="'right'">Menu</app-tooltip>
+      <button popovertarget="menu-popover" class="btn-menu" #menuBtn>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

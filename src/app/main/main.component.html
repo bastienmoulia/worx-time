@@ -4,13 +4,14 @@
     <section>
       <h2>
         {{ day.date | date: "EEE dd/MM" }}
+        <app-tooltip [target]="addAbsenceBtn">Ajouter une absence</app-tooltip>
         <button
           type="button"
           [attr.popovertarget]="'absence-popover' + dayIndex"
-          title="Ajouter une absence"
           class="btn-absence"
           [style.anchorName]="'--absence' + dayIndex"
           [class.active]="day.absence"
+          #addAbsenceBtn
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +89,14 @@
               max="{{ settings().maxTime }}"
             />
           </div>
-          <button (click)="remove(dayIndex, periodIndex)" class="btn-danger">
+          <app-tooltip [target]="removePeriodeBtn"
+            >Supprimer la période</app-tooltip
+          >
+          <button
+            (click)="remove(dayIndex, periodIndex)"
+            class="btn-danger"
+            #removePeriodeBtn
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
