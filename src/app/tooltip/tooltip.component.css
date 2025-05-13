@@ -12,6 +12,7 @@
   color: #fff;
   border: none;
   font-size: 1rem;
+  font-weight: normal;
   transition: opacity 0.3s ease-in-out;
   opacity: 0;
 }
