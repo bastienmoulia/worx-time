@@ -19,7 +19,11 @@
       <div id="menu-popover" class="popover" popover>
         <div>
           <button (click)="logout()">Déconnexion</button>
-          <a class="btn" [routerLink]="['./settings']">Paramètres</a>
+          <a
+            class="btn"
+            [routerLink]="['', { outlets: { modal: ['settings'] } }]"
+            >Paramètres</a
+          >
         </div>
       </div>
     } @else {

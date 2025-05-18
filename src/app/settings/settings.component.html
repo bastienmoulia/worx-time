@@ -34,10 +34,14 @@
       </div>
       <button type="submit" class="btn-success">Enregistrer</button>
       @if (!newSettings()) {
-        <a class="btn btn-danger" [routerLink]="['../']">Annuler</a>
+        <a
+          class="btn btn-danger"
+          [routerLink]="['', { outlets: { modal: [] } }]"
+          >Annuler</a
+        >
       }
     </form>
   } @else {
-    <a class="btn" [routerLink]="['../']">Fermer</a>
+    <a class="btn" [routerLink]="['', { outlets: { modal: [] } }]">Fermer</a>
   }
 </dialog>

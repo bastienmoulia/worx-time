@@ -28,23 +28,25 @@ const canActivate: CanActivateFn = (
 
 export const routes: Routes = [
   {
-    path: "",
+    path: "main",
     loadComponent: () =>
       import("./main/main.component").then((c) => c.MainComponent),
-    children: [
-      {
-        path: "settings",
-        loadComponent: () =>
-          import("./settings/settings.component").then(
-            (c) => c.SettingsComponent,
-          ),
-      },
-    ],
     canActivate: [canActivate],
   },
   {
     path: "login",
     loadComponent: () =>
       import("./login/login.component").then((c) => c.LoginComponent),
+  },
+  {
+    path: "settings",
+    loadComponent: () =>
+      import("./settings/settings.component").then((c) => c.SettingsComponent),
+    outlet: "modal",
+  },
+  {
+    path: "",
+    redirectTo: "main",
+    pathMatch: "full",
   },
 ];

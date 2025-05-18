@@ -12,14 +12,8 @@ import { Auth, user } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
 import { HeaderComponent } from "../header/header.component";
 import { TimePipe } from "../pipes/time.pipe";
-import { Router, RouterOutlet } from "@angular/router";
-import {
-  AppService,
-  Day,
-  DEFAULT_SETTINGS,
-  Period,
-  Settings,
-} from "../app.service";
+import { Router } from "@angular/router";
+import { AppService, Day, DEFAULT_SETTINGS, Period } from "../app.service";
 import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({
@@ -30,9 +24,8 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
     HeaderComponent,
     HeaderComponent,
     DatePipe,
-    RouterOutlet,
-    TooltipComponent
-],
+    TooltipComponent,
+  ],
   templateUrl: "./main.component.html",
   styleUrl: "./main.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
