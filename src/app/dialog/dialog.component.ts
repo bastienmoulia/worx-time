@@ -2,6 +2,7 @@ import { DOCUMENT } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -27,13 +28,21 @@ export interface DialogParams {
 export class DialogComponent implements OnDestroy {
   #document = inject(DOCUMENT);
 
-  class = input<string>();
+  cssClass = input<string>();
+  class = computed(() => {
+    let classString = this.cssClass();
+    if (this.isCloseCancelled()) {
+      classString += " close-cancelled";
+    }
+    return classString;
+  });
   dialog = viewChild.required<ElementRef<HTMLDialogElement>>("dialog");
   params = signal<DialogParams>({
     closeOnOutsideClick: true,
     closeOnEscape: true,
   });
   closed = output<void>();
+  isCloseCancelled = signal(false);
 
   constructor() {
     effect(() => {
@@ -49,7 +58,10 @@ export class DialogComponent implements OnDestroy {
     this.#document.removeEventListener("keydown", this.handleEscapeKey);
   }
 
-  open(): void {
+  open(params?: DialogParams): void {
+    if (params) {
+      this.params.set({ ...this.params(), ...params });
+    }
     this.dialog().nativeElement.showModal();
   }
 
@@ -59,17 +71,29 @@ export class DialogComponent implements OnDestroy {
   }
 
   private handleEscapeKey = (event: KeyboardEvent) => {
-    if (event.key === "Escape" && this.params().closeOnEscape) {
-      this.close();
+    if (event.key === "Escape") {
+      if (this.params().closeOnEscape) {
+        this.close();
+      } else {
+        this.closeCancelled();
+      }
     }
   };
 
   private handleOutsideClick = (event: MouseEvent) => {
-    if (
-      event.target === event.currentTarget &&
-      this.params().closeOnOutsideClick
-    ) {
-      this.close();
+    if (event.target === event.currentTarget) {
+      if (this.params().closeOnOutsideClick) {
+        this.close();
+      } else {
+        this.closeCancelled();
+      }
     }
   };
+
+  private closeCancelled() {
+    this.isCloseCancelled.set(true);
+    setTimeout(() => {
+      this.isCloseCancelled.set(false);
+    }, 100);
+  }
 }

@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.settingsDialog().open();
+    this.settingsDialog().open({ closeOnOutsideClick: false });
   }
 
   save(): void {
@@ -61,6 +61,9 @@ export class SettingsComponent implements OnInit {
 
   close(): void {
     this.settingsDialog().close();
+  }
+
+  onClosed(): void {
     window.setTimeout(() => {
       this.#router.navigate([{ outlets: { modal: null } }]);
     }, 500);

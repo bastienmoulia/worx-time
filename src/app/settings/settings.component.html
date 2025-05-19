@@ -1,4 +1,4 @@
-<app-dialog #settingsDialog>
+<app-dialog #settingsDialog (closed)="onClosed()">
   <h2>Paramètres</h2>
   @if (settingsEdit()) {
     <form (submit)="save()">

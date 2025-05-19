@@ -6,7 +6,8 @@
       opacity 0.5s ease-in-out,
       transform 0.5s ease-in-out,
       overlay 0.5s ease-in-out allow-discrete,
-      display 0.5s ease-in-out allow-discrete;
+      display 0.5s ease-in-out allow-discrete,
+      scale 0.1s ease-in-out allow-discrete;
 
     opacity: 0;
     transform: translateY(1em);
@@ -44,5 +45,9 @@
     dialog[open]::backdrop {
       background-color: rgba(0, 0, 0, 0);
     }
+  }
+
+  .close-cancelled {
+    scale: 1.05;
   }
 }
