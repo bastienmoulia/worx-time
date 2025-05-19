@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
   Auth,
   GoogleAuthProvider,
@@ -12,6 +12,7 @@ import { Router } from "@angular/router";
   imports: [],
   templateUrl: "./login.component.html",
   styleUrl: "./login.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   #auth = inject(Auth);

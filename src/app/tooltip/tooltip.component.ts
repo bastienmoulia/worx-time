@@ -1,5 +1,6 @@
 import { DOCUMENT } from "@angular/common";
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -16,6 +17,7 @@ import {
   imports: [],
   templateUrl: "./tooltip.component.html",
   styleUrl: "./tooltip.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipComponent implements OnDestroy {
   #document = inject(DOCUMENT);
