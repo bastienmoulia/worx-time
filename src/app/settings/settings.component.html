@@ -1,4 +1,4 @@
-<dialog #settingsDialog>
+<app-dialog #settingsDialog>
   <h2>Paramètres</h2>
   @if (settingsEdit()) {
     <form (submit)="save()">
@@ -34,14 +34,12 @@
       </div>
       <button type="submit" class="btn-success">Enregistrer</button>
       @if (!newSettings()) {
-        <a
-          class="btn btn-danger"
-          [routerLink]="['', { outlets: { modal: [] } }]"
-          >Annuler</a
-        >
+        <button type="button" (click)="close()" class="btn-danger">
+          Annuler
+        </button>
       }
     </form>
   } @else {
-    <a class="btn" [routerLink]="['', { outlets: { modal: [] } }]">Fermer</a>
+    <button type="button" (click)="close()">Fermer</button>
   }
-</dialog>
+</app-dialog>

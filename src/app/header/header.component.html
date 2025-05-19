@@ -37,10 +37,15 @@
     }
   </div>
   <div class="header-right">
+    <app-tooltip [target]="githubBtn" [position]="'left'"
+      >Open in Github</app-tooltip
+    >
+
     <a
       class="link"
       href="https://github.com/bastienmoulia/worx-time"
       target="_blank"
+      #githubBtn
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

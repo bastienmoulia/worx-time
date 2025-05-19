@@ -13,10 +13,11 @@ import { Router, RouterLink } from "@angular/router";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Auth, user } from "@angular/fire/auth";
 import { AppService, DEFAULT_SETTINGS, Settings } from "../app.service";
+import { DialogComponent } from "../dialog/dialog.component";
 
 @Component({
   selector: "app-settings",
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule, DialogComponent],
   templateUrl: "./settings.component.html",
   styleUrl: "./settings.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,8 +27,7 @@ export class SettingsComponent implements OnInit {
   #appService = inject(AppService);
   #router = inject(Router);
 
-  settingsDialog =
-    viewChild.required<ElementRef<HTMLDialogElement>>("settingsDialog");
+  settingsDialog = viewChild.required<DialogComponent>("settingsDialog");
   user = toSignal(user(this.#auth));
 
   settingsEdit = signal<Settings>(null!);
@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.settingsDialog().nativeElement.showModal();
+    this.settingsDialog().open();
   }
 
   save(): void {
@@ -57,5 +57,12 @@ export class SettingsComponent implements OnInit {
         this.#appService.settings.set(this.settingsEdit());
       });
     this.#router.navigate([{ outlets: { modal: null } }]);
+  }
+
+  close(): void {
+    this.settingsDialog().close();
+    window.setTimeout(() => {
+      this.#router.navigate([{ outlets: { modal: null } }]);
+    }, 500);
   }
 }
