@@ -63,7 +63,7 @@ export class TooltipComponent implements OnDestroy {
     this.tooltip().nativeElement.hidePopover();
   };
 
-  handleEscapeKey = (event: KeyboardEvent) => {
+  private handleEscapeKey = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
       this.hideTooltip();
     }

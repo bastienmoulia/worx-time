@@ -15,6 +15,7 @@ import { TimePipe } from "../pipes/time.pipe";
 import { Router } from "@angular/router";
 import { AppService, Day, DEFAULT_SETTINGS, Period } from "../app.service";
 import { TooltipComponent } from "../tooltip/tooltip.component";
+import { DialogComponent } from "../dialog/dialog.component";
 
 @Component({
   selector: "app-main",
@@ -25,6 +26,7 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
     HeaderComponent,
     DatePipe,
     TooltipComponent,
+    DialogComponent,
   ],
   templateUrl: "./main.component.html",
   styleUrl: "./main.component.css",
@@ -175,18 +177,30 @@ export class MainComponent {
       });
   }
 
-  remove(dayIndex: number, periodIndex: number) {
-    this.#appService
-      .deletePeriod(
-        this.days()[dayIndex].dayUid!,
-        this.days()[dayIndex].periods[periodIndex].periodUid!,
-      )
-      .then(() => {
-        this.days.update((days) => {
-          days[dayIndex].periods.splice(periodIndex, 1);
-          return [...days];
+  remove(
+    dayIndex: number,
+    periodIndex: number,
+    confirmDialog?: DialogComponent,
+  ) {
+    if (
+      !confirmDialog ||
+      (!this.days()[dayIndex].periods[periodIndex].in &&
+        !this.days()[dayIndex].periods[periodIndex].out)
+    ) {
+      this.#appService
+        .deletePeriod(
+          this.days()[dayIndex].dayUid!,
+          this.days()[dayIndex].periods[periodIndex].periodUid!,
+        )
+        .then(() => {
+          this.days.update((days) => {
+            days[dayIndex].periods.splice(periodIndex, 1);
+            return [...days];
+          });
         });
-      });
+    } else {
+      confirmDialog?.open();
+    }
   }
 
   update(

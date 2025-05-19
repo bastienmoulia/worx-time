@@ -1,0 +1,48 @@
+:host {
+  dialog {
+    border: 0;
+    padding: 0;
+    transition:
+      opacity 0.5s ease-in-out,
+      transform 0.5s ease-in-out,
+      overlay 0.5s ease-in-out allow-discrete,
+      display 0.5s ease-in-out allow-discrete;
+
+    opacity: 0;
+    transform: translateY(1em);
+
+    & > div {
+      display: inline-block;
+    }
+  }
+
+  dialog {
+    &::backdrop {
+      transition:
+        display 0.5s allow-discrete,
+        overlay 0.5s allow-discrete,
+        background-color 0.5s;
+      background-color: rgba(0, 0, 0, 0);
+    }
+
+    &[open]::backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  dialog[open] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+      transform: translateY(-1em);
+    }
+
+    dialog[open]::backdrop {
+      background-color: rgba(0, 0, 0, 0);
+    }
+  }
+}

@@ -56,6 +56,6 @@ export class SettingsComponent implements OnInit {
       .then(() => {
         this.#appService.settings.set(this.settingsEdit());
       });
-    this.#router.navigate(["./"]);
+    this.#router.navigate([{ outlets: { modal: null } }]);
   }
 }

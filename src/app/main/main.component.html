@@ -93,7 +93,7 @@
             >Supprimer la période</app-tooltip
           >
           <button
-            (click)="remove(dayIndex, periodIndex)"
+            (click)="remove(dayIndex, periodIndex, confirmRemoveDialog)"
             class="btn-danger"
             #removePeriodeBtn
           >
@@ -112,6 +112,12 @@
               />
             </svg>
           </button>
+          <app-dialog #confirmRemoveDialog>
+            <h3>Confirmation</h3>
+            <p>Êtes-vous sûr de vouloir supprimer cette période ?</p>
+            <button (click)="confirmRemoveDialog.close()">Annuler</button>
+            <button (click)="remove(dayIndex, periodIndex)">Supprimer</button>
+          </app-dialog>
         }
         <hr />
         @if (day.absence === "day") {
