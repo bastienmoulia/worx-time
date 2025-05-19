@@ -1,3 +1,5 @@
 <div popover="hint" #popover class="{{ class() }}" role="tooltip">
-  <ng-content />
+  @defer (when isVisible()) {
+    <ng-content />
+  }
 </div>

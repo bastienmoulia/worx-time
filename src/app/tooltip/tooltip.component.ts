@@ -7,6 +7,7 @@ import {
   inject,
   input,
   OnDestroy,
+  signal,
   viewChild,
 } from "@angular/core";
 
@@ -29,6 +30,7 @@ export class TooltipComponent implements OnDestroy {
     }
     return `tooltip-${this.position()}`;
   });
+  isVisible = signal(false);
 
   constructor() {
     effect(() => {
@@ -52,6 +54,7 @@ export class TooltipComponent implements OnDestroy {
     this.tooltip().nativeElement.showPopover({
       source: this.target(),
     });
+    this.isVisible.set(true);
   };
 
   hideTooltip = () => {
