@@ -112,6 +112,7 @@ input {
   border-radius: 8px;
   box-sizing: border;
   padding: 2px 4px;
+  min-height: 1em;
 
   &:hover {
     box-shadow:
