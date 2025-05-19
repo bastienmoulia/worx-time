@@ -8,7 +8,7 @@ import {
   viewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Auth, user } from "@angular/fire/auth";
 import { AppService, DEFAULT_SETTINGS, Settings } from "../app.service";
