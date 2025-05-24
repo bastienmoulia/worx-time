@@ -21,11 +21,11 @@ import {
 import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { Day, AppService } from "../app.service";
-import { TooltipComponent } from "../tooltip/tooltip.component";
+import { NgxoTooltipComponent } from "@ngx-overlay/ngx-overlay";
 
 @Component({
   selector: "app-header",
-  imports: [AsyncPipe, TimePipe, FormsModule, RouterLink, TooltipComponent],
+  imports: [AsyncPipe, TimePipe, FormsModule, RouterLink, NgxoTooltipComponent],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -14,7 +14,6 @@ import { HeaderComponent } from "../header/header.component";
 import { TimePipe } from "../pipes/time.pipe";
 import { Router } from "@angular/router";
 import { AppService, Day, DEFAULT_SETTINGS, Period } from "../app.service";
-import { TooltipComponent } from "../tooltip/tooltip.component";
 import { DialogComponent } from "../dialog/dialog.component";
 import { NgxoTooltipComponent } from "@ngx-overlay/ngx-overlay";
 
@@ -26,7 +25,6 @@ import { NgxoTooltipComponent } from "@ngx-overlay/ngx-overlay";
     HeaderComponent,
     HeaderComponent,
     DatePipe,
-    TooltipComponent,
     DialogComponent,
     NgxoTooltipComponent,
   ],

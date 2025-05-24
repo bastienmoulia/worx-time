@@ -1,8 +1,12 @@
 <header>
   <div class="header-left">
     @if (user$ | async) {
-      <app-tooltip [target]="menuBtn" [position]="'right'">Menu</app-tooltip>
-      <button popovertarget="menu-popover" class="btn-menu" #menuBtn>
+      <ngxo-tooltip interestId="menu" position="right">Menu</ngxo-tooltip>
+      <button
+        popovertarget="menu-popover"
+        class="btn-menu"
+        interesttarget="menu"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -37,15 +41,14 @@
     }
   </div>
   <div class="header-right">
-    <app-tooltip [target]="githubBtn" [position]="'left'"
-      >Open in Github</app-tooltip
+    <ngxo-tooltip interestId="github" position="left"
+      >Open in Github</ngxo-tooltip
     >
-
     <a
       class="link"
       href="https://github.com/bastienmoulia/worx-time"
       target="_blank"
-      #githubBtn
+      interesttarget="github"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -4,14 +4,14 @@
     <section>
       <h2>
         {{ day.date | date: "EEE dd/MM" }}
-        <ngxo-tooltip [interestId]="'absence-popover' + dayIndex"
+        <ngxo-tooltip [interestId]="'absence' + dayIndex"
           >Ajouter une absence</ngxo-tooltip
         >
         <button
           type="button"
-          [attr.interesttarget]="'absence-popover' + dayIndex"
+          [attr.interesttarget]="'absence' + dayIndex"
+          [attr.popovertarget]="'absence-popover' + dayIndex"
           class="btn-absence"
-          [style.anchorName]="'--absence' + dayIndex"
           [class.active]="day.absence"
         >
           <svg
@@ -90,13 +90,13 @@
               max="{{ settings().maxTime }}"
             />
           </div>
-          <app-tooltip [target]="removePeriodeBtn"
-            >Supprimer la période</app-tooltip
+          <ngxo-tooltip [interestId]="'remove' + dayIndex + '-' + periodIndex"
+            >Supprimer la période</ngxo-tooltip
           >
           <button
             (click)="remove(dayIndex, periodIndex, confirmRemoveDialog)"
             class="btn-danger"
-            #removePeriodeBtn
+            [attr.interesttarget]="'remove' + dayIndex + '-' + periodIndex"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
