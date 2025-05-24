@@ -4,14 +4,15 @@
     <section>
       <h2>
         {{ day.date | date: "EEE dd/MM" }}
-        <app-tooltip [target]="addAbsenceBtn">Ajouter une absence</app-tooltip>
+        <ngxo-tooltip [interestId]="'absence-popover' + dayIndex"
+          >Ajouter une absence</ngxo-tooltip
+        >
         <button
           type="button"
-          [attr.popovertarget]="'absence-popover' + dayIndex"
+          [attr.interesttarget]="'absence-popover' + dayIndex"
           class="btn-absence"
           [style.anchorName]="'--absence' + dayIndex"
           [class.active]="day.absence"
-          #addAbsenceBtn
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
