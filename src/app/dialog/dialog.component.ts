@@ -1,4 +1,3 @@
-import { DOCUMENT } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,6 +10,7 @@ import {
   output,
   signal,
   viewChild,
+  DOCUMENT,
 } from "@angular/core";
 
 export interface DialogParams {

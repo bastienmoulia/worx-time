@@ -1,7 +1,7 @@
 import {
   ApplicationConfig,
-  provideExperimentalZonelessChangeDetection,
   isDevMode,
+  provideZonelessChangeDetection,
 } from "@angular/core";
 import { provideRouter } from "@angular/router";
 
@@ -13,7 +13,7 @@ import { provideServiceWorker } from "@angular/service-worker";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideFirebaseApp(() =>
       initializeApp({
