@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DOCUMENT,
   effect,
   inject,
   signal,
@@ -16,6 +17,7 @@ import { Router } from "@angular/router";
 import { AppService, Day, DEFAULT_SETTINGS, Period } from "../app/app.service";
 import { Dialog } from "../dialog/dialog";
 import { NgxoTooltipComponent } from "@ngx-overlay/ngx-overlay";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
   selector: "wt-main",
@@ -35,6 +37,7 @@ export class Main {
   #auth = inject(Auth);
   #appService = inject(AppService);
   #router = inject(Router);
+  #document = inject(DOCUMENT);
 
   protected user = toSignal(user(this.#auth));
 
@@ -90,7 +93,17 @@ export class Main {
     return this.#appService.settings();
   });
 
+  protected visibility$ = new BehaviorSubject(0);
+  protected visibility = toSignal(this.visibility$);
+
   constructor() {
+    this.#document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        console.debug("Visibility changed to visible");
+        this.visibility$.next(new Date().getTime());
+      }
+    });
+
     effect(() => {
       console.debug(this.days());
     });
@@ -116,6 +129,7 @@ export class Main {
     });
 
     effect(() => {
+      this.visibility();
       if (this.mondayOfWeek() && this.user()) {
         this.getData(this.mondayOfWeek(), this.user()!.uid);
       }
