@@ -29,19 +29,19 @@ const canActivate: CanActivateFn = (
 export const routes: Routes = [
   {
     path: "main",
-    loadComponent: () =>
-      import("./main/main.component").then((c) => c.MainComponent),
+    loadComponent: () => import("../main/main").then((c) => c.Main),
     canActivate: [canActivate],
   },
   {
     path: "login",
-    loadComponent: () =>
-      import("./login/login.component").then((c) => c.LoginComponent),
+    loadComponent: () => import("../login/login").then((c) => c.Login),
   },
   {
     path: "settings",
     loadComponent: () =>
-      import("./settings/settings.component").then((c) => c.SettingsComponent),
+      import("../settings-dialog/settings-dialog").then(
+        (c) => c.SettingsDialog,
+      ),
     outlet: "modal",
   },
   {

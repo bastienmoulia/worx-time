@@ -9,7 +9,7 @@ import {
   output,
   signal,
 } from "@angular/core";
-import { TimePipe } from "../pipes/time.pipe";
+import { TimePipe } from "../pipes/time-pipe";
 import { AsyncPipe } from "@angular/common";
 import {
   Auth,
@@ -20,28 +20,28 @@ import {
 } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { Day, AppService } from "../app.service";
+import { Day, AppService } from "../app/app.service";
 import { NgxoTooltipComponent } from "@ngx-overlay/ngx-overlay";
 
 @Component({
-  selector: "app-header",
+  selector: "wt-header",
   imports: [AsyncPipe, TimePipe, FormsModule, RouterLink, NgxoTooltipComponent],
-  templateUrl: "./header.component.html",
-  styleUrl: "./header.component.css",
+  templateUrl: "./header.html",
+  styleUrl: "./header.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class Header implements OnInit, OnDestroy {
   #auth = inject(Auth);
   #router = inject(Router);
   #appService = inject(AppService);
 
-  provider = new GoogleAuthProvider();
-  user$ = user(this.#auth);
+  protected provider = new GoogleAuthProvider();
+  protected user$ = user(this.#auth);
 
-  days = input.required<Day[]>();
-  week = signal("");
-  weekYear = output<{ week: number; year: number }>();
-  hoursPeriodByDay = computed(() => {
+  readonly days = input.required<Day[]>();
+  protected week = signal("");
+  protected weekYear = output<{ week: number; year: number }>();
+  protected hoursPeriodByDay = computed(() => {
     return this.days().map((day) => {
       return day.periods.reduce((acc, period) => {
         if (period.in && period.out) {
@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   });
 
-  hoursAbsenceByDay = computed(() => {
+  protected hoursAbsenceByDay = computed(() => {
     return this.days().map((day, index) => {
       // TODO: use settings to get the hours
       if (index < 4) {
@@ -80,22 +80,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   });
 
-  totalByDay = computed(() => {
+  protected totalByDay = computed(() => {
     return this.hoursPeriodByDay().map((hoursByDay, index) => {
       return hoursByDay + this.hoursAbsenceByDay()[index];
     });
   });
-  hoursPeriod = computed(() => {
+  protected hoursPeriod = computed(() => {
     return this.hoursPeriodByDay().reduce((acc, total) => acc + total, 0);
   });
-  total = computed(() => {
+  protected total = computed(() => {
     return this.totalByDay().reduce((acc, total) => acc + total, 0);
   });
-  hoursAbsence = computed(() => {
+  protected hoursAbsence = computed(() => {
     return this.total() - this.hoursPeriod();
   });
-  today = signal(new Date());
-  totalNow = computed(() => {
+  protected today = signal(new Date());
+  protected totalNow = computed(() => {
     const totalNow = this.total();
     const todayDay = this.days().find((day) => {
       return (
@@ -116,10 +116,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     return totalNow;
   });
-  settings = computed(() => {
+  protected settings = computed(() => {
     return this.#appService.settings();
   });
-  interval: number = null!;
+  protected interval: number = null!;
 
   ngOnInit(): void {
     this.week.set(this.getIsoWeek(new Date()));

@@ -4,7 +4,7 @@ import localeFr from "@angular/common/locales/fr";
 import { RouterOutlet } from "@angular/router";
 
 @Component({
-  selector: "app-root",
+  selector: "wt-root",
   imports: [RouterOutlet],
   providers: [{ provide: LOCALE_ID, useValue: "fr" }],
   templateUrl: "./app.component.html",

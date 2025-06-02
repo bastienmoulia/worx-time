@@ -10,39 +10,38 @@ import {
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Auth, user } from "@angular/fire/auth";
 import { FormsModule } from "@angular/forms";
-import { HeaderComponent } from "../header/header.component";
-import { TimePipe } from "../pipes/time.pipe";
+import { Header } from "../header/header";
+import { TimePipe } from "../pipes/time-pipe";
 import { Router } from "@angular/router";
-import { AppService, Day, DEFAULT_SETTINGS, Period } from "../app.service";
-import { DialogComponent } from "../dialog/dialog.component";
+import { AppService, Day, DEFAULT_SETTINGS, Period } from "../app/app.service";
+import { Dialog } from "../dialog/dialog";
 import { NgxoTooltipComponent } from "@ngx-overlay/ngx-overlay";
 
 @Component({
-  selector: "app-main",
+  selector: "wt-main",
   imports: [
     FormsModule,
     TimePipe,
-    HeaderComponent,
-    HeaderComponent,
+    Header,
     DatePipe,
-    DialogComponent,
+    Dialog,
     NgxoTooltipComponent,
   ],
-  templateUrl: "./main.component.html",
-  styleUrl: "./main.component.css",
+  templateUrl: "./main.html",
+  styleUrl: "./main.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent {
+export class Main {
   #auth = inject(Auth);
   #appService = inject(AppService);
   #router = inject(Router);
 
-  user = toSignal(user(this.#auth));
+  protected user = toSignal(user(this.#auth));
 
-  mondayOfWeek = signal<Date>(null!);
-  days = signal<Day[]>([]);
+  protected mondayOfWeek = signal<Date>(null!);
+  protected days = signal<Day[]>([]);
 
-  hoursPeriodByDay = computed(() => {
+  protected hoursPeriodByDay = computed(() => {
     return this.days().map((day) => {
       return day.periods.reduce((acc, period) => {
         if (period.in && period.out) {
@@ -57,7 +56,7 @@ export class MainComponent {
     });
   });
 
-  hoursAbsenceByDay = computed(() => {
+  protected hoursAbsenceByDay = computed(() => {
     return this.days().map((day, index) => {
       // TODO: use settings to get the hours
       if (index < 4) {
@@ -81,13 +80,13 @@ export class MainComponent {
     });
   });
 
-  totalByDay = computed(() => {
+  protected totalByDay = computed(() => {
     return this.hoursPeriodByDay().map((hoursByDay, index) => {
       return hoursByDay + this.hoursAbsenceByDay()[index];
     });
   });
 
-  settings = computed(() => {
+  protected settings = computed(() => {
     return this.#appService.settings();
   });
 
@@ -177,11 +176,7 @@ export class MainComponent {
       });
   }
 
-  remove(
-    dayIndex: number,
-    periodIndex: number,
-    confirmDialog?: DialogComponent,
-  ) {
+  remove(dayIndex: number, periodIndex: number, confirmDialog?: Dialog) {
     if (
       !confirmDialog ||
       (!this.days()[dayIndex].periods[periodIndex].in &&

@@ -8,13 +8,13 @@ import {
 import { Router } from "@angular/router";
 
 @Component({
-  selector: "app-login",
+  selector: "wt-login",
   imports: [],
-  templateUrl: "./login.component.html",
-  styleUrl: "./login.component.css",
+  templateUrl: "./login.html",
+  styleUrl: "./login.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class Login {
   #auth = inject(Auth);
   #router = inject(Router);
 

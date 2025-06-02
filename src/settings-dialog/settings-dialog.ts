@@ -11,26 +11,26 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { Auth, user } from "@angular/fire/auth";
-import { AppService, DEFAULT_SETTINGS, Settings } from "../app.service";
-import { DialogComponent } from "../dialog/dialog.component";
+import { AppService, DEFAULT_SETTINGS, Settings } from "../app/app.service";
+import { Dialog } from "../dialog/dialog";
 
 @Component({
-  selector: "app-settings",
-  imports: [FormsModule, DialogComponent],
-  templateUrl: "./settings.component.html",
-  styleUrl: "./settings.component.css",
+  selector: "wt-settings-dialog",
+  imports: [FormsModule, Dialog],
+  templateUrl: "./settings-dialog.html",
+  styleUrl: "./settings-dialog.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsComponent implements OnInit {
+export class SettingsDialog implements OnInit {
   #auth = inject(Auth);
   #appService = inject(AppService);
   #router = inject(Router);
 
-  settingsDialog = viewChild.required<DialogComponent>("settingsDialog");
-  user = toSignal(user(this.#auth));
+  protected settingsDialog = viewChild.required<Dialog>("settingsDialog");
+  protected user = toSignal(user(this.#auth));
 
-  settingsEdit = signal<Settings>(null!);
-  newSettings = signal(false);
+  protected settingsEdit = signal<Settings>(null!);
+  protected newSettings = signal(false);
 
   constructor() {
     effect(() => {

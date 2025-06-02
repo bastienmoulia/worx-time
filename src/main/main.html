@@ -1,4 +1,4 @@
-<app-header [days]="days()" (weekYear)="weekYearChange($event)" />
+<wt-header [days]="days()" (weekYear)="weekYearChange($event)" />
 <main>
   @for (day of days(); track $index; let dayIndex = $index) {
     <section>
@@ -113,12 +113,12 @@
               />
             </svg>
           </button>
-          <app-dialog #confirmRemoveDialog>
+          <wt-dialog #confirmRemoveDialog>
             <h3>Confirmation</h3>
             <p>Êtes-vous sûr de vouloir supprimer cette période ?</p>
             <button (click)="confirmRemoveDialog.close()">Annuler</button>
             <button (click)="remove(dayIndex, periodIndex)">Supprimer</button>
-          </app-dialog>
+          </wt-dialog>
         }
         <hr />
         @if (day.absence === "day") {

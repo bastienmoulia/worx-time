@@ -19,30 +19,31 @@ export interface DialogParams {
 }
 
 @Component({
-  selector: "app-dialog",
+  selector: "wt-dialog",
   imports: [],
-  templateUrl: "./dialog.component.html",
-  styleUrl: "./dialog.component.css",
+  templateUrl: "./dialog.html",
+  styleUrl: "./dialog.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogComponent implements OnDestroy {
+export class Dialog implements OnDestroy {
   #document = inject(DOCUMENT);
 
-  cssClass = input<string>();
-  class = computed(() => {
+  readonly cssClass = input<string>();
+  protected class = computed(() => {
     let classString = this.cssClass();
     if (this.isCloseCancelled()) {
       classString += " close-cancelled";
     }
     return classString;
   });
-  dialog = viewChild.required<ElementRef<HTMLDialogElement>>("dialog");
-  params = signal<DialogParams>({
+  protected dialog =
+    viewChild.required<ElementRef<HTMLDialogElement>>("dialog");
+  protected params = signal<DialogParams>({
     closeOnOutsideClick: true,
     closeOnEscape: true,
   });
-  closed = output<void>();
-  isCloseCancelled = signal(false);
+  readonly closed = output<void>();
+  protected isCloseCancelled = signal(false);
 
   constructor() {
     effect(() => {

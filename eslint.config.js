@@ -18,7 +18,7 @@ module.exports = tseslint.config(
         "error",
         {
           type: "attribute",
-          prefix: "app",
+          prefix: "wt",
           style: "camelCase",
         },
       ],
@@ -26,7 +26,7 @@ module.exports = tseslint.config(
         "error",
         {
           type: "element",
-          prefix: "app",
+          prefix: "wt",
           style: "kebab-case",
         },
       ],
@@ -38,6 +38,7 @@ module.exports = tseslint.config(
           ignoreRestSiblings: true,
         },
       ],
+      "@angular-eslint/component-class-suffix": ["off"],
     },
   },
   {
