@@ -96,12 +96,22 @@ export class Main {
   protected visibility$ = new BehaviorSubject(0);
   protected visibility = toSignal(this.visibility$);
 
+  protected offline = signal(false);
+
   constructor() {
     this.#document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         console.debug("Visibility changed to visible");
         this.visibility$.next(new Date().getTime());
       }
+    });
+
+    this.#document.defaultView?.addEventListener("offline", () => {
+      this.offline.set(true);
+    });
+
+    this.#document.defaultView?.addEventListener("online", () => {
+      this.offline.set(false);
     });
 
     effect(() => {
