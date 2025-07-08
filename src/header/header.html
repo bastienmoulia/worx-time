@@ -1,44 +1,72 @@
 <header>
   <div class="header-left">
     @if (user$ | async) {
-      <ngxo-tooltip interestId="menu" position="right">Menu</ngxo-tooltip>
-      <button
-        popovertarget="menu-popover"
-        class="btn-menu"
-        interesttarget="menu"
+    <ngxo-tooltip interestId="menu" position="right">Menu</ngxo-tooltip>
+    <button popovertarget="menu-popover" class="btn-menu" interesttarget="menu">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          viewBox="0 0 16 16"
+        <path
+          fill-rule="evenodd"
+          d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+        />
+      </svg>
+    </button>
+    <div id="menu-popover" class="popover" popover>
+      <div>
+        <button (click)="logout()" class="btn-danger">Déconnexion</button>
+        <a class="btn" [routerLink]="['', { outlets: { modal: ['settings'] } }]"
+          >Paramètres</a
         >
-          <path
-            fill-rule="evenodd"
-            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
-          />
-        </svg>
-      </button>
-      <div id="menu-popover" class="popover" popover>
-        <div>
-          <button (click)="logout()" class="btn-danger">Déconnexion</button>
-          <a
-            class="btn"
-            [routerLink]="['', { outlets: { modal: ['settings'] } }]"
-            >Paramètres</a
-          >
-        </div>
       </div>
+    </div>
     } @else {
-      <button (click)="login()">Connexion</button>
+    <button (click)="login()">Connexion</button>
     }
   </div>
   <div class="header-center">
-    <input type="week" [(ngModel)]="week" (ngModelChange)="weekChange()" />
-    @if (settings()) {
+    <ngxo-tooltip interestId="previousWeek" position="left"
+      >Semaine précédente</ngxo-tooltip
+    >
+    <button class="btn" (click)="previousWeek()" interesttarget="previousWeek">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"
+        />
+      </svg>
+    </button>
+    <div>
+      <input type="week" [(ngModel)]="week" (ngModelChange)="weekChange()" />
+      @if (settings()) {
       <h1>{{ total() | time }} / {{ settings().weekHours | time }}</h1>
-    }
+      }
+    </div>
+    <button class="btn" (click)="nextWeek()" interesttarget="nextWeek">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"
+        />
+      </svg>
+    </button>
+    <ngxo-tooltip interestId="nextWeek" position="right"
+      >Semaine suivante</ngxo-tooltip
+    >
   </div>
   <div class="header-right">
     <ngxo-tooltip interestId="github" position="left"
@@ -65,30 +93,29 @@
   </div>
 </header>
 @if (settings()) {
-  <div class="progress-container">
-    @if (total() !== hoursPeriod()) {
-      <div
-        class="progress"
-        [style.width.%]="(total() / settings().weekHours) * 100"
-      ></div>
-    }
-    <div
-      class="progress-period"
-      [style.width.%]="(hoursPeriod() / settings().weekHours) * 100"
-    ></div>
-    @if (total() !== totalNow()) {
-      <div
-        class="progress-now"
-        [style.width.%]="(totalNow() / settings().weekHours) * 100"
-      ></div>
-    }
-    @if (total() !== totalNow() && totalNow() !== hoursPeriod()) {
-      <div
-        class="progress-period-now"
-        [style.width.%]="
+<div class="progress-container">
+  @if (total() !== hoursPeriod()) {
+  <div
+    class="progress"
+    [style.width.%]="(total() / settings().weekHours) * 100"
+  ></div>
+  }
+  <div
+    class="progress-period"
+    [style.width.%]="(hoursPeriod() / settings().weekHours) * 100"
+  ></div>
+  @if (total() !== totalNow()) {
+  <div
+    class="progress-now"
+    [style.width.%]="(totalNow() / settings().weekHours) * 100"
+  ></div>
+  } @if (total() !== totalNow() && totalNow() !== hoursPeriod()) {
+  <div
+    class="progress-period-now"
+    [style.width.%]="
           ((totalNow() - hoursAbsence()) / settings().weekHours) * 100
         "
-      ></div>
-    }
-  </div>
+  ></div>
+  }
+</div>
 }

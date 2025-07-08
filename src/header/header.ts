@@ -160,6 +160,36 @@ export class Header implements OnInit, OnDestroy {
     this.#router.navigate(["./login"]);
   }
 
+  previousWeek() {
+    this.week.update((week) => {
+      const [year, weekNumber] = week.split("-W").map(Number);
+      const date = new Date(Date.UTC(year, 0, 1 + weekNumber * 7));
+      date.setUTCDate(date.getUTCDate() - 7);
+      const newYear = date.getUTCFullYear();
+      const newWeekNumber = Math.ceil(
+        (date.getTime() - new Date(Date.UTC(newYear, 0, 1)).getTime()) /
+          (1000 * 60 * 60 * 24 * 7),
+      );
+      return `${newYear}-W${newWeekNumber.toString().padStart(2, "0")}`;
+    });
+    this.weekChange();
+  }
+
+  nextWeek() {
+    this.week.update((week) => {
+      const [year, weekNumber] = week.split("-W").map(Number);
+      const date = new Date(Date.UTC(year, 0, 1 + weekNumber * 7));
+      date.setUTCDate(date.getUTCDate() + 7);
+      const newYear = date.getUTCFullYear();
+      const newWeekNumber = Math.ceil(
+        (date.getTime() - new Date(Date.UTC(newYear, 0, 1)).getTime()) /
+          (1000 * 60 * 60 * 24 * 7),
+      );
+      return `${newYear}-W${newWeekNumber.toString().padStart(2, "0")}`;
+    });
+    this.weekChange();
+  }
+
   private getIsoWeek(d: Date): string {
     const date = new Date(d.getTime());
     date.setHours(0, 0, 0, 0);
