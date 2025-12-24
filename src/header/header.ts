@@ -57,24 +57,13 @@ export class Header implements OnInit, OnDestroy {
   });
 
   protected hoursAbsenceByDay = computed(() => {
-    return this.days().map((day, index) => {
-      // TODO: use settings to get the hours
-      if (index < 4) {
-        if (day.absence === "day") {
-          return 7.5;
-        } else if (day.absence === "morning") {
-          return 3.75;
-        } else if (day.absence === "afternoon") {
-          return 3.75;
-        }
-      } else {
-        if (day.absence === "day") {
-          return 7;
-        } else if (day.absence === "morning") {
-          return 3.5;
-        } else if (day.absence === "afternoon") {
-          return 3.5;
-        }
+    const dailyHours = this.settings().weekHours / 5;
+    const halfDayHours = dailyHours / 2;
+    return this.days().map((day) => {
+      if (day.absence === "day") {
+        return dailyHours;
+      } else if (day.absence) {
+        return halfDayHours;
       }
       return 0;
     });
