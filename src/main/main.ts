@@ -65,9 +65,7 @@ export class Main {
     return this.days().map((day) => {
       if (day.absence === "day") {
         return dailyHours;
-      } else if (day.absence === "morning") {
-        return halfDayHours;
-      } else if (day.absence === "afternoon") {
+      } else if (day.absence) {
         return halfDayHours;
       }
       return 0;
